@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import com.qa.user_app.data.entity.User;
 import com.qa.user_app.data.repository.UserRepository;
@@ -15,7 +16,7 @@ public class ApplicationStartupListener implements ApplicationListener<Applicati
 
 	private UserRepository userRepository;
 	
-	@Autowired
+	@Autowired // dependency injection
 	public ApplicationStartupListener(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}

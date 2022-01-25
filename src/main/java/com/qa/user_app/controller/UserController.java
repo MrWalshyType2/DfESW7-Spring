@@ -65,13 +65,31 @@ public class UserController {
 	public User updateUser(@PathVariable("id") long id, @Valid @RequestBody User user) {
 		// repository.save() will overwrite entities that already exist in the db
 		// TODO: implement update user
-		return null;
+		
+		// 1. Check if the user exists
+		if (repository.existsById(id)) {
+			// 2. get user in db
+			User userInDb = repository.getById(id);
+			
+			// 3. Update users fields
+			userInDb.setAge(user.getAge());
+			userInDb.setForename(user.getForename());
+			userInDb.setSurname(user.getSurname());
+			
+			// 4. Save the updated user
+			return repository.save(userInDb);
+		} else {
+		// else if the user doesn't exist, save them to the database
+			return repository.save(user);
+		}
 	}
 
 	// DELETE
 	@DeleteMapping("/{id}")
 	public void deleteUser(@PathVariable("id") long id) {
-		// implement delete user
+		if (repository.existsById(id)) {
+			repository.deleteById(id);
+		}
 	}
 
 }
