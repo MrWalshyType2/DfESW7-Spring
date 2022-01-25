@@ -2,11 +2,32 @@ package com.qa.user_app.data.entity;
 
 import java.util.Objects;
 
+import javax.annotation.Generated;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "user")
 public class User {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotNull
 	private String forename;
+	
+	@NotNull
 	private String surname;
+	
+	@Max(130)
+	@Min(18)
 	private Integer age;
 
 	public User() {
