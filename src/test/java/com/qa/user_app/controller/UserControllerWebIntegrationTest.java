@@ -1,6 +1,7 @@
 package com.qa.user_app.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,13 +34,14 @@ public class UserControllerWebIntegrationTest {
 	
 	// we need a fake UserService
 	// - we can use Mockito to create a mock object
-	@MockBean
+	@MockBean // we are using our defined UserService, but the methods
+			  // will be mocked (we have to specify what is returned from them)
 	private UserService userService;
 	
 	// we need some data for our tests
-	private List<User> users;
-	private User userToCreate;
-	private User validUser;
+	private List<User> users; // list of users with ids
+	private User userToCreate; // without id
+	private User validUser; // with id
 	
 	@BeforeEach // junit5 (jupiter) annotation to run this method before every test
 	public void init() {
@@ -62,11 +64,11 @@ public class UserControllerWebIntegrationTest {
 		
 		// then (assert this happened)
 		ResponseEntity<List<User>> actual = controller.getUsers();
-		assertThat(expected).isEqualTo(actual);
+		assertThat(expected).isEqualTo(actual); // static assertThat method from assertJ
 		
 		// we also need to verify that the service was called by the controller
-		verify(userService, times(1)).getAll();
-		// verify(userService).getAll();
+		verify(userService, times(1)).getAll(); // verify and times are from mockito
+		// verify(userService).getAll(); // equivalent to the above line
 	}
 	
 	@Test
@@ -88,15 +90,18 @@ public class UserControllerWebIntegrationTest {
 	@Test
 	public void getUserByIdTest() {
 		// TODO: Implement me
+		fail("Need implementing");
 	}
 	
 	@Test
 	public void updateUserTest() {
 		// TODO: Implement me
+		fail("Need implementing");
 	}
 	
 	@Test
 	public void deleteUserTest() {
 		// TODO: Implement me
+		fail("Need implementing");
 	}
 }
