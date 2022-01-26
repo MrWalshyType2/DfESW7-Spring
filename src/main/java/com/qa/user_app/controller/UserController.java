@@ -77,16 +77,19 @@ public class UserController {
 	// update everything, aside from the id
 	@PutMapping("/{id}") // localhost:8080/user/1
 	public ResponseEntity<User> updateUser(@PathVariable("id") long id, @Valid @RequestBody User user) {
-		// repository.save() will overwrite entities that already exist in the db
-		// TODO: implement update user
-		return null;
+		User updatedUser = userService.update(id, user);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Location", "/user/" + String.valueOf(updatedUser.getId()));
+		
+		return new ResponseEntity<User>(updatedUser, headers, HttpStatus.ACCEPTED);
 	}
 
 	// DELETE
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
-		// TODO: implement delete user
-		return null;
+		userService.delete(id);
+		return ResponseEntity.accepted().build();
 	}
 
 }
