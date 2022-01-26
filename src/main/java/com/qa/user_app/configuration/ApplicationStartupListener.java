@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import com.qa.user_app.data.entity.User;
 import com.qa.user_app.data.repository.UserRepository;
 
+@Profile("dev")
 @Configuration
 public class ApplicationStartupListener implements ApplicationListener<ApplicationReadyEvent> {
 
