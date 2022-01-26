@@ -50,6 +50,14 @@ public class User {
 		this.age = age;
 	}
 
+	public User(long id, String forename, String surname, Integer age) {
+		super();
+		this.id = id;
+		this.forename = forename;
+		this.surname = surname;
+		this.age = age;
+	}
+
 	public Long getId() {
 		return id;
 	}
