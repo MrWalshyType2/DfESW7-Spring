@@ -25,7 +25,7 @@ public class UserService {
 		return userRepository.findAll();
 	}
 	
-	public User getById(Long id) {
+	public User getById(long id) {
 		return userRepository.findById(id).orElseThrow(() -> {
 			return new EntityNotFoundException("User with id " + id + " does not exist");
 		});
@@ -59,7 +59,7 @@ public class UserService {
 		}
 	}
 	
-	public void delete(Long id) {
+	public void delete(long id) {
 		if (userRepository.existsById(id)) {
 			userRepository.deleteById(id);
 		} else {

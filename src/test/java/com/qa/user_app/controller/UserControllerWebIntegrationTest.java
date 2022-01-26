@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,19 +90,41 @@ public class UserControllerWebIntegrationTest {
 	
 	@Test
 	public void getUserByIdTest() {
-		// TODO: Implement me
-		fail("Need implementing");
+		ResponseEntity<User> expected = ResponseEntity.of(Optional.of(validUser));
+		
+		when(userService.getById(1)).thenReturn(validUser);
+		
+		ResponseEntity<User> actual = controller.getUserById(1);
+		
+		assertEquals(expected, actual);
+		
+		verify(userService, times(1)).getById(1);
 	}
 	
 	@Test
 	public void updateUserTest() {
-		// TODO: Implement me
-		fail("Need implementing");
+		User updatedUser = new User(1, "bob", "lee-swagger", 22);
+		User toUpdateWith = new User("bob", "lee-swagger", 22);
+		long userId = updatedUser.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Location", "/user/" + String.valueOf(updatedUser.getId()));
+		ResponseEntity<User> expected = new ResponseEntity<User>(updatedUser, headers, HttpStatus.ACCEPTED);
+		
+		when(userService.update(userId, toUpdateWith)).thenReturn(updatedUser);
+		
+		ResponseEntity<User> actual = controller.updateUser(userId, toUpdateWith);
+		
+		assertEquals(expected, actual);
+		verify(userService).update(userId, toUpdateWith);
 	}
 	
 	@Test
 	public void deleteUserTest() {
-		// TODO: Implement me
-		fail("Need implementing");
+		ResponseEntity<?> expected = ResponseEntity.accepted().build();
+		ResponseEntity<?> actual = controller.deleteUser(1);
+		
+		assertEquals(expected, actual);
+		verify(userService).delete(1);
 	}
 }
