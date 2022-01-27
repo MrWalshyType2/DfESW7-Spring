@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,55 +25,72 @@ public class UserServiceUnitTest {
 
 	@Mock // equivalent to MockBean
 	private UserRepository userRepository;
-	
+
 	@InjectMocks // equivalent to @Autowired
 	private UserService userService;
-	
+
 	private List<User> users;
 	private User expectedUserWithId;
 	private User expectedUserWithoutId;
-	
+
 	@BeforeEach // junit5 (jupiter) annotation to run this method before every test
 	public void init() {
 		users = new ArrayList<>();
-		users.addAll(List.of(new User(1, "bob", "lee", 22), 
-				  			 new User(2, "fred", "see", 25),
-				  			 new User(3, "sarah", "fee", 28)));
+		users.addAll(List.of(new User(1, "bob", "lee", 22), new User(2, "fred", "see", 25),
+				new User(3, "sarah", "fee", 28)));
 		expectedUserWithoutId = new User("bob", "lee", 22);
 		expectedUserWithId = new User(1, "bob", "lee", 22);
 	}
-	
+
 	@Test
 	public void getAllUsersTest() {
 		when(userRepository.findAll()).thenReturn(users);
 		assertThat(userService.getAll()).isEqualTo(users);
 		verify(userRepository).findAll();
 	}
-	
+
 	@Test
 	public void createUserTest() {
-		when(userRepository.save(expectedUserWithoutId))
-						   .thenReturn(expectedUserWithId);
-		
+		when(userRepository.save(expectedUserWithoutId)).thenReturn(expectedUserWithId);
+
 		assertThat(userService.create(expectedUserWithoutId)).isEqualTo(expectedUserWithId);
 		verify(userRepository).save(expectedUserWithoutId);
 	}
-	
+
 	@Test
 	public void getUserByIdTest() {
-		// TODO: Implement me
-		fail("Implement me");
+		long id = expectedUserWithId.getId();
+		when(userRepository.findById(id)).thenReturn(Optional.of(expectedUserWithId));
+		assertThat(userService.getById(id)).isEqualTo(expectedUserWithId);
+		verify(userRepository).findById(id);
 	}
 
 	@Test
 	public void updateUserTest() {
-		// TODO: Implement me
-		fail("Implement me");
+		// id and userWithUpdatesToMake are passed to service.update()
+		long id = expectedUserWithId.getId();
+		User userWithUpdatesToMake = new User(expectedUserWithId.getId(),
+											  expectedUserWithId.getForename(), 
+											  expectedUserWithId.getSurname(), 
+											  expectedUserWithId.getAge() + 1);
+		
+		// expectedUserWithId is the one in the database that we are pretending is their
+		when(userRepository.existsById(id)).thenReturn(true);
+		when(userRepository.getById(id)).thenReturn(expectedUserWithId);
+		when(userRepository.save(expectedUserWithId)).thenReturn(userWithUpdatesToMake);
+		
+		assertThat(userService.update(id, userWithUpdatesToMake)).isEqualTo(userWithUpdatesToMake);
+		verify(userRepository).existsById(id);
+		verify(userRepository).getById(id);
+		verify(userRepository).save(expectedUserWithId);
 	}
 
 	@Test
 	public void deleteUserTest() {
-		// TODO: Implement me
-		fail("Implement me");
+		long id = expectedUserWithId.getId();
+		when(userRepository.existsById(id)).thenReturn(true);
+		userService.delete(id);
+		verify(userRepository).existsById(id);
+		verify(userRepository).deleteById(id);
 	}
 }

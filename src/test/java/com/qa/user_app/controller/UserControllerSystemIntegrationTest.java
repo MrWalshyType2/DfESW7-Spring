@@ -59,7 +59,7 @@ public class UserControllerSystemIntegrationTest {
 
 	private List<User> usersInDatabase;
 	private long nextNewElementsId;
-	
+
 	// initialise the database for our tests
 	@BeforeEach
 	public void init() {
@@ -70,7 +70,7 @@ public class UserControllerSystemIntegrationTest {
 		int size = usersInDatabase.size();
 		nextNewElementsId = usersInDatabase.get(size - 1).getId() + 1;
 	}
-	
+
 	@Test
 	public void getAllUsersTest() throws Exception {
 		// Create a mock http request builder
@@ -96,19 +96,24 @@ public class UserControllerSystemIntegrationTest {
 	@Test
 	public void createUserTest() throws Exception {
 		User userToSave = new User("Janet", "Carlisle", 32);
-		User expectedUser = new User(nextNewElementsId, userToSave.getForename(), userToSave.getSurname(), userToSave.getAge());
-		
+		User expectedUser = new User(nextNewElementsId, userToSave.getForename(), userToSave.getSurname(),
+				userToSave.getAge());
+
 		// Configure mock request
 		MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.request(HttpMethod.POST, "/user");
-		
-		mockRequest.contentType(MediaType.APPLICATION_JSON); // Content-Type: application/json (type of the data in the body of the request)
-		mockRequest.content(objectMapper.writeValueAsString(userToSave)); // set the body of the request to a JSON string
-		// .content() adds { "forename": "Janet", "surname": "Carlisle", "age": 32 } to the body
+
+		mockRequest.contentType(MediaType.APPLICATION_JSON); // Content-Type: application/json (type of the data in the
+																// body of the request)
+		mockRequest.content(objectMapper.writeValueAsString(userToSave)); // set the body of the request to a JSON
+																			// string
+		// .content() adds { "forename": "Janet", "surname": "Carlisle", "age": 32 } to
+		// the body
 		mockRequest.accept(MediaType.APPLICATION_JSON);
 
 		// Configure ResultMatchers
 		ResultMatcher statusMatcher = MockMvcResultMatchers.status().isCreated();
-		ResultMatcher contentMatcher = MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedUser));
+		ResultMatcher contentMatcher = MockMvcResultMatchers.content()
+				.json(objectMapper.writeValueAsString(expectedUser));
 
 		// Send the request and assert the results where as expected
 		mockMvc.perform(mockRequest).andExpect(statusMatcher).andExpect(contentMatcher);
@@ -121,9 +126,21 @@ public class UserControllerSystemIntegrationTest {
 	}
 
 	@Test
-	public void updateUserTest() {
-		// TODO: Implement me
-		fail("Implement me");
+	public void updateUserTest() throws Exception {
+		// GIVEN
+		Long userId = 2L;
+		User detailsToUpdate = new User("Janette", "Carlisle", 35);
+		User expectedUser = new User(userId, "Janette", "Carlisle", 35);
+		// Configure mock request
+		MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.request(HttpMethod.PUT, "/user/" + userId);
+		mockRequest.contentType(MediaType.APPLICATION_JSON);
+		mockRequest.content(objectMapper.writeValueAsString(detailsToUpdate));
+		mockRequest.accept(MediaType.APPLICATION_JSON);
+		String userJson = objectMapper.writeValueAsString(expectedUser);
+		ResultMatcher statusMatcher = MockMvcResultMatchers.status().isAccepted();
+		ResultMatcher contentMatcher = MockMvcResultMatchers.content().json(userJson); // Send the request and assert
+																						// the results where as expected
+		mockMvc.perform(mockRequest).andExpect(statusMatcher).andExpect(contentMatcher);
 	}
 
 	@Test

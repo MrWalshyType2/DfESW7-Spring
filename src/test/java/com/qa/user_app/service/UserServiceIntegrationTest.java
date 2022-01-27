@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -55,19 +56,30 @@ public class UserServiceIntegrationTest {
 	
 	@Test
 	public void getUserByIdTest() {
-		// TODO: Implement me
-		fail("Implement me");
+		User userInDb = usersInDatabase.get(0);
+		assertThat(userService.getById(userInDb.getId())).isEqualTo(userInDb);
 	}
 
 	@Test
 	public void updateUserTest() {
-		// TODO: Implement me
-		fail("Implement me");
+		User userInDb = usersInDatabase.get(0);
+		long id = userInDb.getId();
+		User userWithUpdatesToMake = new User(userInDb.getId(), 
+											  userInDb.getForename(), 
+											  userInDb.getSurname(), 
+											  userInDb.getAge() + 1);
+		
+		User actual = userService.update(id, userWithUpdatesToMake);
+		assertThat(actual).isEqualTo(userWithUpdatesToMake);
 	}
 
 	@Test
 	public void deleteUserTest() {
-		// TODO: Implement me
-		fail("Implement me");
+		User userInDb = usersInDatabase.get(0);
+		long id = userInDb.getId();
+		
+		userService.delete(id);
+		
+		assertThat(userRepository.findById(id)).isEqualTo(Optional.empty());
 	}
 }
