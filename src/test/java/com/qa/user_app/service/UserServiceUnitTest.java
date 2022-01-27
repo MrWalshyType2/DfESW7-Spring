@@ -19,7 +19,7 @@ import com.qa.user_app.data.entity.User;
 import com.qa.user_app.data.repository.UserRepository;
 
 // No need to use the spring boot context, just create stubs using pure Mockito rather than Springs variant of Mockito
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class) // JUnit test runner
 public class UserServiceUnitTest {
 
 	@Mock // equivalent to MockBean
@@ -51,7 +51,9 @@ public class UserServiceUnitTest {
 	
 	@Test
 	public void createUserTest() {
-		when(userRepository.save(expectedUserWithoutId)).thenReturn(expectedUserWithId);
+		when(userRepository.save(expectedUserWithoutId))
+						   .thenReturn(expectedUserWithId);
+		
 		assertThat(userService.create(expectedUserWithoutId)).isEqualTo(expectedUserWithId);
 		verify(userRepository).save(expectedUserWithoutId);
 	}

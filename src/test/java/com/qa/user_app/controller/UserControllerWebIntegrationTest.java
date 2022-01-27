@@ -30,7 +30,7 @@ import com.qa.user_app.service.UserService;
 @WebMvcTest(UserController.class)
 public class UserControllerWebIntegrationTest {
 
-	@Autowired
+	@Autowired // field injection
 	private UserController controller;
 	
 	// we need a fake UserService
@@ -83,7 +83,7 @@ public class UserControllerWebIntegrationTest {
 		
 		// then
 		ResponseEntity<User> actual = controller.createUser(userToCreate);
-		assertEquals(expected, actual);
+		assertEquals(expected, actual); // junit assertion
 		
 		verify(userService).create(userToCreate);
 	}
@@ -108,7 +108,7 @@ public class UserControllerWebIntegrationTest {
 		long userId = updatedUser.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Location", "/user/" + String.valueOf(updatedUser.getId()));
+		headers.add("Location", "/user/" + String.valueOf(userId));
 		ResponseEntity<User> expected = new ResponseEntity<User>(updatedUser, headers, HttpStatus.ACCEPTED);
 		
 		when(userService.update(userId, toUpdateWith)).thenReturn(updatedUser);
@@ -121,10 +121,11 @@ public class UserControllerWebIntegrationTest {
 	
 	@Test
 	public void deleteUserTest() {
+		long userId = 1;
 		ResponseEntity<?> expected = ResponseEntity.accepted().build();
-		ResponseEntity<?> actual = controller.deleteUser(1);
+		ResponseEntity<?> actual = controller.deleteUser(userId);
 		
 		assertEquals(expected, actual);
-		verify(userService).delete(1);
+		verify(userService).delete(userId);
 	}
 }

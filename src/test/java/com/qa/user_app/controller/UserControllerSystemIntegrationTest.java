@@ -38,6 +38,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qa.user_app.data.entity.User;
 import com.qa.user_app.data.repository.UserRepository;
 
+// Setting a random port is good practice in preparation for parallel testing
+// - running multiple tests at the same time
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT) // Start the ApplicationContext on a random port
 @AutoConfigureMockMvc // Configure the MockMvc object
 @Transactional // Roll back the state of the database after every test so each test has a fresh
@@ -68,14 +70,14 @@ public class UserControllerSystemIntegrationTest {
 		int size = usersInDatabase.size();
 		nextNewElementsId = usersInDatabase.get(size - 1).getId() + 1;
 	}
-
+	
 	@Test
 	public void getAllUsersTest() throws Exception {
 		// Create a mock http request builder
 		MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.request(HttpMethod.GET, "/user");
 
 		// Specify the Accept header for the expected returned content type (MediaType)
-		mockRequest.accept(MediaType.APPLICATION_JSON);
+		mockRequest.accept(MediaType.APPLICATION_JSON); // Accept: application/json
 
 		// Create expected JSON String from usersInDatabase using the ObjectMapper
 		// instance
@@ -99,8 +101,9 @@ public class UserControllerSystemIntegrationTest {
 		// Configure mock request
 		MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.request(HttpMethod.POST, "/user");
 		
-		mockRequest.contentType(MediaType.APPLICATION_JSON); // set the Content-Type header for the body data
+		mockRequest.contentType(MediaType.APPLICATION_JSON); // Content-Type: application/json (type of the data in the body of the request)
 		mockRequest.content(objectMapper.writeValueAsString(userToSave)); // set the body of the request to a JSON string
+		// .content() adds { "forename": "Janet", "surname": "Carlisle", "age": 32 } to the body
 		mockRequest.accept(MediaType.APPLICATION_JSON);
 
 		// Configure ResultMatchers
