@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.qa.user_app.data.entity.User;
 import com.qa.user_app.data.repository.UserRepository;
+import com.qa.user_app.exceptions.UserNotFoundException;
 
 // No need to use the spring boot context, just create stubs using pure Mockito rather than Springs variant of Mockito
 @ExtendWith(MockitoExtension.class) // JUnit test runner
@@ -62,6 +64,22 @@ public class UserServiceUnitTest {
 		long id = expectedUserWithId.getId();
 		when(userRepository.findById(id)).thenReturn(Optional.of(expectedUserWithId));
 		assertThat(userService.getById(id)).isEqualTo(expectedUserWithId);
+		verify(userRepository).findById(id);
+	}
+	
+	@Test
+	public void getUserByInvalidIdTest() {
+		long id = 34;
+		when(userRepository.findById(id)).thenReturn(Optional.empty());
+		
+		// assert that the code in the lambda (second param) throws the exception specified in
+		// the first param
+		UserNotFoundException e = Assertions.assertThrows(UserNotFoundException.class, () -> {
+			userService.getById(id);
+		});
+		
+		String expected = "User with id " + id + " does not exist";
+		assertThat(e.getMessage()).isEqualTo(expected);
 		verify(userRepository).findById(id);
 	}
 

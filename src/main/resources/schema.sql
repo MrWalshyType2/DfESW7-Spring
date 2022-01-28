@@ -7,6 +7,7 @@ CREATE TABLE `user` (
     `surname` VARCHAR(255) NOT NULL,
     `age` INT NOT NULL,
     PRIMARY KEY(`id`),
+    -- <> is not equal to
     CHECK(`forename` <> ''),
     CHECK(`surname` <> ''),
     CHECK(`age` >= 18),

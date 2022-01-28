@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.qa.user_app.data.entity.User;
 import com.qa.user_app.data.repository.UserRepository;
+import com.qa.user_app.exceptions.UserNotFoundException;
 
 @Service
 public class UserService {
@@ -27,7 +28,7 @@ public class UserService {
 	
 	public User getById(long id) {
 		return userRepository.findById(id).orElseThrow(() -> {
-			return new EntityNotFoundException("User with id " + id + " does not exist");
+			return new UserNotFoundException("User with id " + id + " does not exist");
 		});
 		
 //		if (userRepository.existsById(id)) {
@@ -55,7 +56,7 @@ public class UserService {
 			// 4. Save the updated user
 			return userRepository.save(userInDb);
 		} else {
-			throw new EntityNotFoundException("User with id " + id + " does not exist");
+			throw new UserNotFoundException("User with id " + id + " does not exist");
 		}
 	}
 	
@@ -63,7 +64,7 @@ public class UserService {
 		if (userRepository.existsById(id)) {
 			userRepository.deleteById(id);
 		} else {
-			throw new EntityNotFoundException("User with id " + id + " does not exist");
+			throw new UserNotFoundException("User with id " + id + " does not exist");
 		}
 	}
 }
