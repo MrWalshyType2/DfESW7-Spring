@@ -69,15 +69,21 @@ public class UserServiceUnitTest {
 	
 	@Test
 	public void getUserByInvalidIdTest() {
+		// Arrange-Act-Assert testing structure
+		// - simplifies testing
+		
+		// Arrange (the data and components under test)
 		long id = 34;
 		when(userRepository.findById(id)).thenReturn(Optional.empty());
 		
+		// Act (perform the action under test)
 		// assert that the code in the lambda (second param) throws the exception specified in
 		// the first param
 		UserNotFoundException e = Assertions.assertThrows(UserNotFoundException.class, () -> {
 			userService.getById(id);
 		});
 		
+		// Assert (the action was successful)
 		String expected = "User with id " + id + " does not exist";
 		assertThat(e.getMessage()).isEqualTo(expected);
 		verify(userRepository).findById(id);
